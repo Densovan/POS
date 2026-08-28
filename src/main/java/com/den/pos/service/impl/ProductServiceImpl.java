@@ -1,0 +1,112 @@
+package com.den.pos.service.impl;
+
+import com.den.pos.entity.catalog.Product;
+import com.den.pos.exception.ConflictException;
+import com.den.pos.exception.ResourceNotFoundException;
+import com.den.pos.mapper.ProductMapper;
+import com.den.pos.repository.catalog.ProductRepository;
+import com.den.pos.service.ProductService;
+import com.den.pos.web.dto.ProductRequest;
+import com.den.pos.web.dto.ProductResponse;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
+
+@Service
+public class ProductServiceImpl implements ProductService {
+
+    private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
+
+    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper) {
+        this.productRepository = productRepository;
+        this.productMapper = productMapper;
+    }
+
+    @Override
+    @Transactional
+    public ProductResponse create(ProductRequest request) {
+        Product product = new Product();
+        applyRequest(product, request);
+        return productMapper.toResponse(save(product));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ProductResponse getById(UUID id) {
+        return productRepository.findById(id)
+                .map(productMapper::toResponse)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<ProductResponse> search(String keyword, Pageable pageable) {
+        return productRepository.searchByKeyword(keyword, pageable).map(productMapper::toResponse);
+    }
+
+    @Override
+    @Transactional
+    public ProductResponse update(UUID id, ProductRequest request) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+        applyRequest(product, request);
+        return productMapper.toResponse(save(product));
+    }
+
+    @Override
+    @Transactional
+    public void deactivate(UUID id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+        product.setIsActive(false);
+        productRepository.save(product);
+    }
+
+    private Product save(Product product) {
+        try {
+            return productRepository.saveAndFlush(product);
+        } catch (DataIntegrityViolationException ex) {
+            throw new ConflictException("SKU already exists");
+        }
+    }
+
+    private void applyRequest(Product product, ProductRequest request) {
+        product.setName(request.name());
+        product.setSku(request.sku());
+        product.setBarcode(request.barcode());
+        product.setCategoryId(request.categoryId());
+        product.setBrandId(request.brandId());
+        product.setUnitId(request.unitId());
+        product.setTaxClassId(request.taxClassId());
+        product.setCostPrice(request.costPrice());
+        product.setSellingPrice(request.sellingPrice());
+        product.setWholesalePrice(request.wholesalePrice());
+        product.setMinStockLevel(request.minStockLevel() != null ? request.minStockLevel() : 0);
+        product.setMaxStockLevel(request.maxStockLevel());
+        product.setReorderPoint(request.reorderPoint() != null ? request.reorderPoint() : 0);
+        product.setReorderQuantity(request.reorderQuantity());
+        product.setShortDescription(request.shortDescription());
+        product.setDescription(request.description());
+        product.setMainImageUrl(request.mainImageUrl());
+        if (product.getIsActive() == null) {
+            product.setIsActive(true);
+        }
+        if (product.getIsVariantParent() == null) {
+            product.setIsVariantParent(false);
+        }
+        if (product.getIsTrackStock() == null) {
+            product.setIsTrackStock(true);
+        }
+        if (product.getIsSerialized() == null) {
+            product.setIsSerialized(false);
+        }
+        if (product.getHasBatches() == null) {
+            product.setHasBatches(false);
+        }
+    }
+}

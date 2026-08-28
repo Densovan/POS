@@ -1,0 +1,44 @@
+package com.den.pos.repository.auth;
+
+import com.den.pos.entity.auth.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.UUID;
+
+public interface UserRepository extends JpaRepository<User, UUID> {
+
+    @Query(value = "SELECT * FROM users WHERE email = :email", nativeQuery = true)
+    Optional<User> findByEmail(@Param("email") String email);
+
+    @Query(value = "SELECT * FROM users WHERE employee_id = :employeeId", nativeQuery = true)
+    Optional<User> findByEmployeeId(@Param("employeeId") UUID employeeId);
+
+    @Modifying(flushAutomatically = true, clearAutomatically = true)
+    @Query(value = """
+            UPDATE users
+            SET last_login_at = :loginAt, login_attempts = 0, locked_until = NULL, updated_at = CURRENT_TIMESTAMP
+            WHERE id = :userId
+            """, nativeQuery = true)
+    int recordSuccessfulLogin(@Param("userId") UUID userId, @Param("loginAt") LocalDateTime loginAt);
+
+    @Modifying(flushAutomatically = true, clearAutomatically = true)
+    @Query(value = """
+            UPDATE users
+            SET login_attempts = login_attempts + 1,
+                locked_until = CASE WHEN login_attempts + 1 >= :maxAttempts THEN :lockedUntil ELSE locked_until END,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE id = :userId
+            """, nativeQuery = true)
+    int recordFailedLogin(@Param("userId") UUID userId,
+                          @Param("maxAttempts") int maxAttempts,
+                          @Param("lockedUntil") LocalDateTime lockedUntil);
+
+    @Modifying(flushAutomatically = true, clearAutomatically = true)
+    @Query(value = "UPDATE users SET refresh_token = :refreshToken, updated_at = CURRENT_TIMESTAMP WHERE id = :userId", nativeQuery = true)
+    int updateRefreshToken(@Param("userId") UUID userId, @Param("refreshToken") String refreshToken);
+}

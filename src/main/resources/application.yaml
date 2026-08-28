@@ -1,0 +1,207 @@
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: /api/v1
+    session:
+      timeout: 30m
+      cookie:
+        same-site: Lax
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+  tomcat:
+    threads:
+      max: 200
+      min-spare: 20
+    connection-timeout: 30000
+
+spring:
+  application:
+    name: pos-system
+
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+  web:
+    error:
+      include-stacktrace: never
+      include-message: never
+      include-binding-errors: never
+
+  config:
+    # [.properties] suffix tells Spring how to parse the extensionless .env file
+    import: optional:file:./.env[.properties],optional:file:.pos/.env[.properties]
+
+  datasource:
+    # Defaults target the dockerized postgres exposed on host port 5434.
+    # In compose, SPRING_DATASOURCE_URL env var overrides these entirely.
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5434}/${DB_NAME:pos_db}
+    username: ${DB_USERNAME:pos_user}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      keepalive-time: 300000
+      pool-name: POSConnectionPool
+
+  jpa:
+    show-sql: ${SHOW_SQL:false}
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: false
+        jdbc:
+          batch_size: 50
+          time_zone: UTC
+        order_inserts: true
+        order_updates: true
+        default_batch_fetch_size: 20
+        generate_statistics: true
+        session:
+          events:
+            log:
+              LOG_QUERIES_SLOWER_THAN_MS: 25
+    hibernate:
+      ddl-auto: ${DDL_AUTO:validate}
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+    encoding: UTF-8
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      timeout: 5000ms
+      repositories:
+        enabled: false
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 2
+          time-between-eviction-runs: 60s
+
+  cache:
+    type: redis
+    redis:
+      time-to-live: 3600000
+      cache-null-values: false
+      key-prefix: "pos:cache:"
+
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+        transport:
+          protocol: smtp
+
+  jackson:
+    serialization:
+      indent-output: true
+    deserialization:
+      fail-on-unknown-properties: false
+    default-property-inclusion: non_null
+
+  task:
+    execution:
+      pool:
+        core-size: 10
+        max-size: 50
+        queue-capacity: 100
+    scheduling:
+      pool:
+        size: 5
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: when-authorized
+      show-components: when-authorized
+      roles: ADMIN
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+  health:
+    mail:
+      enabled: ${MAIL_HEALTH_ENABLED:false}
+
+logging:
+  level:
+    root: ${LOG_LEVEL:INFO}
+    com.den.pos: ${LOG_LEVEL_POS:DEBUG}
+    org.springframework.security: INFO
+    org.hibernate: INFO
+    org.hibernate.SQL: ${SHOW_SQL:false}
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/pos-system.log
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-history: 30
+
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:4200}
+  allowed-methods: GET,POST,PUT,DELETE,PATCH,OPTIONS
+  allowed-headers: "*"
+  allow-credentials: true
+
+app:
+  security:
+    jwt:
+      secret: ${JWT_SECRET}
+      expiration: ${JWT_EXPIRATION:900000}
+      refresh-token-expiration: ${REFRESH_TOKEN_EXPIRATION:604800000}
+
+pos:
+  shop:
+    name: ${SHOP_NAME:My Store}
+    address: ${SHOP_ADDRESS:123 Main Street}
+    phone: ${SHOP_PHONE:+855 12 345 678}
+    email: ${SHOP_EMAIL:info@mystore.com}
+    tax-id: ${SHOP_TAX_ID:123456789}
+  currency:
+    symbol: ${CURRENCY_SYMBOL:$}
+    code: ${CURRENCY_CODE:USD}
+  receipt:
+    header: ${RECEIPT_HEADER:Thank you for shopping!}
+    footer: ${RECEIPT_FOOTER:Please come again!}
+    print:
+      width: 48
+      charset: UTF-8
+  barcode:
+    type: ${BARCODE_TYPE:CODE128}
+    width: 200
+    height: 100
+  printing:
+    default-printer: ${DEFAULT_PRINTER:}
+    kitchen-printer: ${KITCHEN_PRINTER:}
+    cash-drawer-port: ${CASH_DRAWER_PORT:COM1}

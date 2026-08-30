@@ -12,10 +12,10 @@ import java.util.UUID;
 
 public interface TaxClassRepository extends JpaRepository<TaxClass, UUID> {
 
-    @Query(value = "SELECT * FROM tax_classes WHERE is_default = true LIMIT 1", nativeQuery = true)
+    @Query(value = "SELECT * FROM tax_classes WHERE is_default = true AND is_deleted = false LIMIT 1", nativeQuery = true)
     Optional<TaxClass> findDefault();
 
-    @Query(value = "SELECT * FROM tax_classes ORDER BY rate", nativeQuery = true)
+    @Query(value = "SELECT * FROM tax_classes WHERE is_deleted = false ORDER BY rate", nativeQuery = true)
     List<TaxClass> findAllOrderByRate();
 
     @Modifying(flushAutomatically = true, clearAutomatically = true)

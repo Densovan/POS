@@ -2,18 +2,17 @@ package com.den.pos.entity.supplier;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
-import jakarta.persistence.Version;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.UuidGenerator;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.UUID;
+import com.den.pos.entity.BaseEntity;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Getter
 @Setter
@@ -24,15 +23,13 @@ import java.util.UUID;
         @Index(name = "idx_purchase_order_items_purchase_order_id", columnList = "purchase_order_id"),
         @Index(name = "idx_purchase_order_items_variant_id", columnList = "variant_id")
 })
-public class PurchaseOrderItem {
-
-    @Id
-    @UuidGenerator(style = UuidGenerator.Style.VERSION_7)
-    private UUID id;
-
-    @Version
-    @Column(name = "version", nullable = false)
-    private Long version;
+@SQLDelete(sql = """
+        UPDATE purchase_order_items
+        SET is_deleted = true, updated_at = CURRENT_TIMESTAMP
+        WHERE id = ? AND version = ?
+        """)
+@SQLRestriction("is_deleted = false")
+public class PurchaseOrderItem extends BaseEntity {
 
     @Column(name = "purchase_order_id", nullable = false)
     private UUID purchaseOrderId;
@@ -57,10 +54,4 @@ public class PurchaseOrderItem {
 
     @Column(name = "notes", columnDefinition = "text")
     private String notes;
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 }

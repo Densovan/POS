@@ -12,13 +12,13 @@ import java.util.UUID;
 
 public interface PurchaseOrderRepository extends JpaRepository<PurchaseOrder, UUID> {
 
-    @Query(value = "SELECT * FROM purchase_orders WHERE po_number = :poNumber", nativeQuery = true)
+    @Query(value = "SELECT * FROM purchase_orders WHERE po_number = :poNumber AND is_deleted = false", nativeQuery = true)
     Optional<PurchaseOrder> findByPoNumber(@Param("poNumber") String poNumber);
 
-    @Query(value = "SELECT * FROM purchase_orders WHERE supplier_id = :supplierId ORDER BY order_date DESC", nativeQuery = true)
+    @Query(value = "SELECT * FROM purchase_orders WHERE supplier_id = :supplierId AND is_deleted = false ORDER BY order_date DESC", nativeQuery = true)
     List<PurchaseOrder> findBySupplierId(@Param("supplierId") UUID supplierId);
 
-    @Query(value = "SELECT * FROM purchase_orders WHERE status = :status ORDER BY created_at DESC", nativeQuery = true)
+    @Query(value = "SELECT * FROM purchase_orders WHERE status = :status AND is_deleted = false ORDER BY created_at DESC", nativeQuery = true)
     List<PurchaseOrder> findByStatus(@Param("status") String status);
 
     @Modifying(flushAutomatically = true, clearAutomatically = true)

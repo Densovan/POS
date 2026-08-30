@@ -12,10 +12,10 @@ import java.util.UUID;
 
 public interface StockAdjustmentRepository extends JpaRepository<StockAdjustment, UUID> {
 
-    @Query(value = "SELECT * FROM stock_adjustments WHERE approved_by IS NULL ORDER BY created_at DESC", nativeQuery = true)
+    @Query(value = "SELECT * FROM stock_adjustments WHERE approved_by IS NULL AND is_deleted = false ORDER BY created_at DESC", nativeQuery = true)
     List<StockAdjustment> findPending();
 
-    @Query(value = "SELECT * FROM stock_adjustments WHERE product_id = :productId ORDER BY created_at DESC", nativeQuery = true)
+    @Query(value = "SELECT * FROM stock_adjustments WHERE product_id = :productId AND is_deleted = false ORDER BY created_at DESC", nativeQuery = true)
     List<StockAdjustment> findByProductId(@Param("productId") UUID productId);
 
     @Modifying(flushAutomatically = true, clearAutomatically = true)

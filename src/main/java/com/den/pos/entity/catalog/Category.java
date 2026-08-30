@@ -2,18 +2,17 @@ package com.den.pos.entity.catalog;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
-import jakarta.persistence.Version;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.NaturalId;
-import org.hibernate.annotations.UuidGenerator;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
+import com.den.pos.entity.BaseEntity;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Getter
 @Setter
@@ -23,15 +22,13 @@ import java.util.UUID;
         @Index(name = "idx_categories_parent_id", columnList = "parent_id"),
         @Index(name = "idx_categories_tax_class_id", columnList = "tax_class_id")
 })
-public class Category {
-
-    @Id
-    @UuidGenerator(style = UuidGenerator.Style.VERSION_7)
-    private UUID id;
-
-    @Version
-    @Column(name = "version", nullable = false)
-    private Long version;
+@SQLDelete(sql = """
+        UPDATE categories
+        SET is_deleted = true, updated_at = CURRENT_TIMESTAMP
+        WHERE id = ? AND version = ?
+        """)
+@SQLRestriction("is_deleted = false")
+public class Category extends BaseEntity {
 
     @Column(name = "parent_id")
     private UUID parentId;
@@ -57,10 +54,4 @@ public class Category {
 
     @Column(name = "display_order")
     private Integer displayOrder;
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 }

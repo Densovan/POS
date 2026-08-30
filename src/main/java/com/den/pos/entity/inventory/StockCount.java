@@ -2,18 +2,18 @@ package com.den.pos.entity.inventory;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
-import jakarta.persistence.Version;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
+import com.den.pos.entity.BaseEntity;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Getter
 @Setter
@@ -24,15 +24,13 @@ import java.util.UUID;
         @Index(name = "idx_stock_counts_expected_by", columnList = "expected_by"),
         @Index(name = "idx_stock_counts_warehouse_id", columnList = "warehouse_id")
 })
-public class StockCount {
-
-    @Id
-    @UuidGenerator(style = UuidGenerator.Style.VERSION_7)
-    private UUID id;
-
-    @Version
-    @Column(name = "version", nullable = false)
-    private Long version;
+@SQLDelete(sql = """
+        UPDATE stock_counts
+        SET is_deleted = true, updated_at = CURRENT_TIMESTAMP
+        WHERE id = ? AND version = ?
+        """)
+@SQLRestriction("is_deleted = false")
+public class StockCount extends BaseEntity {
 
     @Column(name = "count_date", nullable = false)
     private LocalDate countDate;
@@ -54,10 +52,4 @@ public class StockCount {
 
     @Column(name = "notes", columnDefinition = "text")
     private String notes;
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 }

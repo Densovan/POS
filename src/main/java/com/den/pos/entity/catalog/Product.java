@@ -2,19 +2,18 @@ package com.den.pos.entity.catalog;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
-import jakarta.persistence.Version;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.NaturalId;
-import org.hibernate.annotations.UuidGenerator;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.UUID;
+import com.den.pos.entity.BaseEntity;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Getter
 @Setter
@@ -26,15 +25,13 @@ import java.util.UUID;
         @Index(name = "idx_products_tax_class_id", columnList = "tax_class_id"),
         @Index(name = "idx_products_unit_id", columnList = "unit_id")
 })
-public class Product {
-
-    @Id
-    @UuidGenerator(style = UuidGenerator.Style.VERSION_7)
-    private UUID id;
-
-    @Version
-    @Column(name = "version", nullable = false)
-    private Long version;
+@SQLDelete(sql = """
+        UPDATE products
+        SET is_deleted = true, updated_at = CURRENT_TIMESTAMP
+        WHERE id = ? AND version = ?
+        """)
+@SQLRestriction("is_deleted = false")
+public class Product extends BaseEntity {
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -123,10 +120,4 @@ public class Product {
 
     @Column(name = "meta_keywords", columnDefinition = "text")
     private String metaKeywords;
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 }

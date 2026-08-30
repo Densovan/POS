@@ -12,17 +12,17 @@ import java.util.UUID;
 
 public interface SaleItemRepository extends JpaRepository<SaleItem, UUID> {
 
-    @Query(value = "SELECT * FROM sale_items WHERE sale_id = :saleId", nativeQuery = true)
+    @Query(value = "SELECT * FROM sale_items WHERE sale_id = :saleId AND is_deleted = false", nativeQuery = true)
     List<SaleItem> findBySaleId(@Param("saleId") UUID saleId);
 
-    @Query(value = "SELECT * FROM sale_items WHERE batch_id = :batchId", nativeQuery = true)
+    @Query(value = "SELECT * FROM sale_items WHERE batch_id = :batchId AND is_deleted = false", nativeQuery = true)
     List<SaleItem> findByBatchId(@Param("batchId") UUID batchId);
 
     @Query(value = """
             SELECT si.product_id, si.product_name, SUM(si.quantity) AS total_sold
             FROM sale_items si
             JOIN sales s ON s.id = si.sale_id
-            WHERE s.sale_date >= :from AND s.sale_date < :to AND s.is_deleted = false
+            WHERE s.sale_date >= :from AND s.sale_date < :to AND s.is_deleted = false AND si.is_deleted = false
             GROUP BY si.product_id, si.product_name
             ORDER BY total_sold DESC
             LIMIT :limit

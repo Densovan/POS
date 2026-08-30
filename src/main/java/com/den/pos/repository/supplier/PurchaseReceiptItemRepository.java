@@ -10,12 +10,12 @@ import java.util.UUID;
 
 public interface PurchaseReceiptItemRepository extends JpaRepository<PurchaseReceiptItem, UUID> {
 
-    @Query(value = "SELECT * FROM purchase_receipt_items WHERE purchase_receipt_id = :purchaseReceiptId", nativeQuery = true)
+    @Query(value = "SELECT * FROM purchase_receipt_items WHERE purchase_receipt_id = :purchaseReceiptId AND is_deleted = false", nativeQuery = true)
     List<PurchaseReceiptItem> findByPurchaseReceiptId(@Param("purchaseReceiptId") UUID purchaseReceiptId);
 
     @Query(value = """
             SELECT * FROM purchase_receipt_items
-            WHERE rejected_quantity > 0 AND product_id = :productId
+            WHERE rejected_quantity > 0 AND product_id = :productId AND is_deleted = false
             ORDER BY created_at DESC
             """, nativeQuery = true)
     List<PurchaseReceiptItem> findRejectedByProductId(@Param("productId") UUID productId);

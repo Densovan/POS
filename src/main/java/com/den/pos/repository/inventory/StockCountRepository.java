@@ -10,9 +10,9 @@ import java.util.UUID;
 
 public interface StockCountRepository extends JpaRepository<StockCount, UUID> {
 
-    @Query(value = "SELECT * FROM stock_counts WHERE status = :status ORDER BY count_date DESC", nativeQuery = true)
+    @Query(value = "SELECT * FROM stock_counts WHERE status = :status AND is_deleted = false ORDER BY count_date DESC", nativeQuery = true)
     List<StockCount> findByStatus(@Param("status") String status);
 
-    @Query(value = "SELECT * FROM stock_counts WHERE warehouse_id = :warehouseId ORDER BY count_date DESC", nativeQuery = true)
+    @Query(value = "SELECT * FROM stock_counts WHERE warehouse_id = :warehouseId AND is_deleted = false ORDER BY count_date DESC", nativeQuery = true)
     List<StockCount> findByWarehouseId(@Param("warehouseId") UUID warehouseId);
 }

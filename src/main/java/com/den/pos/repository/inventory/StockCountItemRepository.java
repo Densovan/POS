@@ -10,9 +10,9 @@ import java.util.UUID;
 
 public interface StockCountItemRepository extends JpaRepository<StockCountItem, UUID> {
 
-    @Query(value = "SELECT * FROM stock_count_items WHERE stock_count_id = :stockCountId", nativeQuery = true)
+    @Query(value = "SELECT * FROM stock_count_items WHERE stock_count_id = :stockCountId AND is_deleted = false", nativeQuery = true)
     List<StockCountItem> findByStockCountId(@Param("stockCountId") UUID stockCountId);
 
-    @Query(value = "SELECT * FROM stock_count_items WHERE stock_count_id = :stockCountId AND variance <> 0", nativeQuery = true)
+    @Query(value = "SELECT * FROM stock_count_items WHERE stock_count_id = :stockCountId AND is_deleted = false AND variance <> 0", nativeQuery = true)
     List<StockCountItem> findVarianceItems(@Param("stockCountId") UUID stockCountId);
 }

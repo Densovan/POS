@@ -14,10 +14,10 @@ import java.util.UUID;
 
 public interface ShiftRepository extends JpaRepository<Shift, UUID> {
 
-    @Query(value = "SELECT * FROM shifts WHERE employee_id = :employeeId AND status = 'active' ORDER BY start_time DESC LIMIT 1", nativeQuery = true)
+    @Query(value = "SELECT * FROM shifts WHERE employee_id = :employeeId AND status = 'active' AND is_deleted = false ORDER BY start_time DESC LIMIT 1", nativeQuery = true)
     Optional<Shift> findActiveShiftByEmployeeId(@Param("employeeId") UUID employeeId);
 
-    @Query(value = "SELECT * FROM shifts WHERE employee_id = :employeeId AND shift_date >= :from AND shift_date <= :to ORDER BY shift_date DESC", nativeQuery = true)
+    @Query(value = "SELECT * FROM shifts WHERE employee_id = :employeeId AND shift_date >= :from AND shift_date <= :to AND is_deleted = false ORDER BY shift_date DESC", nativeQuery = true)
     List<Shift> findByEmployeeAndDateRange(@Param("employeeId") UUID employeeId,
                                            @Param("from") LocalDateTime from,
                                            @Param("to") LocalDateTime to);

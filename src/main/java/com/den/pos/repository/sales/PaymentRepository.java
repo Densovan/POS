@@ -12,10 +12,10 @@ import java.util.UUID;
 
 public interface PaymentRepository extends JpaRepository<Payment, UUID> {
 
-    @Query(value = "SELECT * FROM payments WHERE sale_id = :saleId ORDER BY created_at", nativeQuery = true)
+    @Query(value = "SELECT * FROM payments WHERE sale_id = :saleId AND is_deleted = false ORDER BY created_at", nativeQuery = true)
     List<Payment> findBySaleId(@Param("saleId") UUID saleId);
 
-    @Query(value = "SELECT COALESCE(SUM(amount), 0) FROM payments WHERE sale_id = :saleId AND payment_status = 'completed'", nativeQuery = true)
+    @Query(value = "SELECT COALESCE(SUM(amount), 0) FROM payments WHERE sale_id = :saleId AND payment_status = 'completed' AND is_deleted = false", nativeQuery = true)
     BigDecimal sumCompletedAmountBySaleId(@Param("saleId") UUID saleId);
 
     @Modifying(flushAutomatically = true, clearAutomatically = true)

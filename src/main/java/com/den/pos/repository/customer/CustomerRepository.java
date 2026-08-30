@@ -13,19 +13,20 @@ import java.util.UUID;
 
 public interface CustomerRepository extends JpaRepository<Customer, UUID> {
 
-    @Query(value = "SELECT * FROM customers WHERE phone = :phone", nativeQuery = true)
+    @Query(value = "SELECT * FROM customers WHERE phone = :phone AND is_deleted = false", nativeQuery = true)
     Optional<Customer> findByPhone(@Param("phone") String phone);
 
     @Query(value = """
             SELECT * FROM customers
-            WHERE first_name ILIKE CONCAT('%', :keyword, '%')
+            WHERE (first_name ILIKE CONCAT('%', :keyword, '%')
                OR last_name ILIKE CONCAT('%', :keyword, '%')
-               OR phone ILIKE CONCAT('%', :keyword, '%')
+               OR phone ILIKE CONCAT('%', :keyword, '%'))
+              AND is_deleted = false
             ORDER BY created_at DESC
             """, nativeQuery = true)
     List<Customer> searchByKeyword(@Param("keyword") String keyword);
 
-    @Query(value = "SELECT * FROM customers WHERE loyalty_tier = :tier AND is_active = true ORDER BY total_spent DESC", nativeQuery = true)
+    @Query(value = "SELECT * FROM customers WHERE loyalty_tier = :tier AND is_active = true AND is_deleted = false ORDER BY total_spent DESC", nativeQuery = true)
     List<Customer> findByLoyaltyTier(@Param("tier") String tier);
 
     @Modifying(flushAutomatically = true, clearAutomatically = true)

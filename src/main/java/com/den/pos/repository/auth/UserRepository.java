@@ -12,10 +12,10 @@ import java.util.UUID;
 
 public interface UserRepository extends JpaRepository<User, UUID> {
 
-    @Query(value = "SELECT * FROM users WHERE email = :email", nativeQuery = true)
+    @Query(value = "SELECT * FROM users WHERE email = :email AND is_deleted = false", nativeQuery = true)
     Optional<User> findByEmail(@Param("email") String email);
 
-    @Query(value = "SELECT * FROM users WHERE employee_id = :employeeId", nativeQuery = true)
+    @Query(value = "SELECT * FROM users WHERE employee_id = :employeeId AND is_deleted = false", nativeQuery = true)
     Optional<User> findByEmployeeId(@Param("employeeId") UUID employeeId);
 
     @Modifying(flushAutomatically = true, clearAutomatically = true)

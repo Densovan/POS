@@ -11,12 +11,12 @@ import java.util.UUID;
 
 public interface SupplierPaymentRepository extends JpaRepository<SupplierPayment, UUID> {
 
-    @Query(value = "SELECT * FROM supplier_payments WHERE supplier_id = :supplierId ORDER BY payment_date DESC", nativeQuery = true)
+    @Query(value = "SELECT * FROM supplier_payments WHERE supplier_id = :supplierId AND is_deleted = false ORDER BY payment_date DESC", nativeQuery = true)
     List<SupplierPayment> findBySupplierId(@Param("supplierId") UUID supplierId);
 
-    @Query(value = "SELECT * FROM supplier_payments WHERE purchase_order_id = :purchaseOrderId ORDER BY payment_date DESC", nativeQuery = true)
+    @Query(value = "SELECT * FROM supplier_payments WHERE purchase_order_id = :purchaseOrderId AND is_deleted = false ORDER BY payment_date DESC", nativeQuery = true)
     List<SupplierPayment> findByPurchaseOrderId(@Param("purchaseOrderId") UUID purchaseOrderId);
 
-    @Query(value = "SELECT COALESCE(SUM(amount), 0) FROM supplier_payments WHERE purchase_order_id = :purchaseOrderId", nativeQuery = true)
+    @Query(value = "SELECT COALESCE(SUM(amount), 0) FROM supplier_payments WHERE purchase_order_id = :purchaseOrderId AND is_deleted = false", nativeQuery = true)
     BigDecimal sumPaidAmountByPurchaseOrderId(@Param("purchaseOrderId") UUID purchaseOrderId);
 }

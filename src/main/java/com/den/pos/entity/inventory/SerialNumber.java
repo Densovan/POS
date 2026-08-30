@@ -2,19 +2,18 @@ package com.den.pos.entity.inventory;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
-import jakarta.persistence.Version;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.NaturalId;
-import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.UUID;
+import com.den.pos.entity.BaseEntity;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Getter
 @Setter
@@ -28,15 +27,13 @@ import java.util.UUID;
         @Index(name = "idx_serial_numbers_sale_item_id", columnList = "sale_item_id"),
         @Index(name = "idx_serial_numbers_variant_id", columnList = "variant_id")
 })
-public class SerialNumber {
-
-    @Id
-    @UuidGenerator(style = UuidGenerator.Style.VERSION_7)
-    private UUID id;
-
-    @Version
-    @Column(name = "version", nullable = false)
-    private Long version;
+@SQLDelete(sql = """
+        UPDATE serial_numbers
+        SET is_deleted = true, updated_at = CURRENT_TIMESTAMP
+        WHERE id = ? AND version = ?
+        """)
+@SQLRestriction("is_deleted = false")
+public class SerialNumber extends BaseEntity {
 
     @Column(name = "product_id")
     private UUID productId;
@@ -74,10 +71,4 @@ public class SerialNumber {
 
     @Column(name = "notes", columnDefinition = "text")
     private String notes;
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 }

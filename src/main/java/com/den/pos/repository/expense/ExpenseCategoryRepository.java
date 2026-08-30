@@ -9,6 +9,6 @@ import java.util.UUID;
 
 public interface ExpenseCategoryRepository extends JpaRepository<ExpenseCategory, UUID> {
 
-    @Query(value = "SELECT * FROM expense_categories WHERE is_active = true ORDER BY name", nativeQuery = true)
+    @Query(value = "SELECT * FROM expense_categories WHERE is_active = true AND is_deleted = false ORDER BY name", nativeQuery = true)
     List<ExpenseCategory> findAllActive();
 }

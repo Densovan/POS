@@ -24,7 +24,7 @@ public interface SaleRepository extends JpaRepository<Sale, UUID> {
             nativeQuery = true)
     Page<Sale> findByCustomerId(@Param("customerId") UUID customerId, Pageable pageable);
 
-    @Query(value = "SELECT * FROM sales WHERE cashier_id = :cashierId AND sale_date >= :from AND sale_date < :to ORDER BY sale_date DESC", nativeQuery = true)
+    @Query(value = "SELECT * FROM sales WHERE cashier_id = :cashierId AND sale_date >= :from AND sale_date < :to AND is_deleted = false ORDER BY sale_date DESC", nativeQuery = true)
     List<Sale> findByCashierAndDateRange(@Param("cashierId") UUID cashierId,
                                          @Param("from") LocalDateTime from,
                                          @Param("to") LocalDateTime to);

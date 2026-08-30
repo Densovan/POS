@@ -11,9 +11,9 @@ import java.util.UUID;
 
 public interface WarehouseRepository extends JpaRepository<Warehouse, UUID> {
 
-    @Query(value = "SELECT * FROM warehouses WHERE code = :code", nativeQuery = true)
+    @Query(value = "SELECT * FROM warehouses WHERE code = :code AND is_deleted = false", nativeQuery = true)
     Optional<Warehouse> findByCode(@Param("code") String code);
 
-    @Query(value = "SELECT * FROM warehouses WHERE is_active = true ORDER BY name", nativeQuery = true)
+    @Query(value = "SELECT * FROM warehouses WHERE is_active = true AND is_deleted = false ORDER BY name", nativeQuery = true)
     List<Warehouse> findAllActive();
 }

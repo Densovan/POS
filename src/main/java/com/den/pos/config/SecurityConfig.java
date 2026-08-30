@@ -67,17 +67,27 @@ public class SecurityConfig {
     }
 
     @Bean
+    @Order(Integer.MIN_VALUE)
+    public SecurityFilterChain bootUiSecurityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .securityMatcher("/bootui", "/bootui/**")
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+                .headers(this::applySecurityHeaders);
+
+        return http.build();
+    }
+
+    @Bean
     @Order(1)
-    public SecurityFilterChain actuatorSecurityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain managementSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .securityMatcher("/actuator/**")
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .headers(this::applySecurityHeaders)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/actuator/health", "/actuator/info").permitAll()
                         .anyRequest().authenticated())
+                .headers(this::applySecurityHeaders)
                 .exceptionHandling(e -> e
                         .authenticationEntryPoint((request, response, ex) ->
                                 writeError(response, HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized")));

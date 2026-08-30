@@ -133,6 +133,8 @@ spring:
         size: 5
 
 management:
+  server:
+    port: ${MANAGEMENT_PORT:8098}
   endpoints:
     web:
       exposure:

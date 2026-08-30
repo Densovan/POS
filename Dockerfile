@@ -18,10 +18,10 @@ RUN addgroup -S spring && adduser -S spring -G spring && \
 COPY --from=build /app/target/app.jar app.jar
 
 USER spring
-EXPOSE 8080
+EXPOSE 8080 8098
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
-  CMD wget -qO- http://127.0.0.1:${SERVER_PORT:-8080}/api/v1/actuator/health || exit 1
+  CMD wget -qO- http://127.0.0.1:${MANAGEMENT_PORT:-8098}/actuator/health || exit 1
 
 ENTRYPOINT ["java", \
   "-XX:MaxRAMPercentage=75.0", \

@@ -9,6 +9,8 @@ import com.den.pos.service.ProductService;
 import com.den.pos.web.dto.ProductRequest;
 import com.den.pos.web.dto.ProductResponse;
 import org.springframework.dao.DataIntegrityViolationException;
+
+import java.sql.SQLException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -71,8 +73,31 @@ public class ProductServiceImpl implements ProductService {
         try {
             return productRepository.saveAndFlush(product);
         } catch (DataIntegrityViolationException ex) {
-            throw new ConflictException("SKU already exists");
+            throw toConflict(ex, product);
         }
+    }
+
+    private ConflictException toConflict(DataIntegrityViolationException ex, Product product) {
+        SQLException cause = findSqlException(ex);
+        String state = cause != null ? cause.getSQLState() : null;
+        if ("23505".equals(state)) {
+            return new ConflictException("SKU already exists: " + product.getSku());
+        }
+        if ("23503".equals(state)) {
+            return new ConflictException("Referenced record does not exist (invalid category, brand, unit, or tax class)");
+        }
+        return new ConflictException("Data integrity violation");
+    }
+
+    private SQLException findSqlException(Throwable ex) {
+        Throwable current = ex;
+        while (current != null) {
+            if (current instanceof SQLException sql) {
+                return sql;
+            }
+            current = current.getCause();
+        }
+        return null;
     }
 
     private void applyRequest(Product product, ProductRequest request) {

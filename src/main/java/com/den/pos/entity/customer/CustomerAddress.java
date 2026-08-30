@@ -10,8 +10,7 @@ import lombok.Setter;
 
 import java.util.UUID;
 import com.den.pos.entity.BaseEntity;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.annotations.SoftDelete;
 
 @Getter
 @Setter
@@ -20,12 +19,7 @@ import org.hibernate.annotations.SQLRestriction;
 @Table(name = "customer_addresses", indexes = {
         @Index(name = "idx_customer_addresses_customer_id", columnList = "customer_id")
 })
-@SQLDelete(sql = """
-        UPDATE customer_addresses
-        SET is_deleted = true, updated_at = CURRENT_TIMESTAMP
-        WHERE id = ? AND version = ?
-        """)
-@SQLRestriction("is_deleted = false")
+@SoftDelete(columnName = "is_deleted")
 public class CustomerAddress extends BaseEntity {
 
     @Column(name = "customer_id", nullable = false)

@@ -11,7 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.util.Optional;
 import java.util.UUID;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @EnableJpaAuditing(auditorAwareRef = "jpaAuditorAware")
 public class JpaAuditingConfig {
 

@@ -45,9 +45,6 @@ public abstract class BaseEntity {
     @Column(name = "updated_by")
     private UUID updatedBy;
 
-    @Column(name = "is_deleted", nullable = false)
-    private Boolean isDeleted = false;
-
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 

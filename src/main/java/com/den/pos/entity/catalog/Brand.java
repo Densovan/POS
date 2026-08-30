@@ -10,20 +10,14 @@ import org.hibernate.annotations.NaturalId;
 
 import java.util.UUID;
 import com.den.pos.entity.BaseEntity;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.annotations.SoftDelete;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "brands")
-@SQLDelete(sql = """
-        UPDATE brands
-        SET is_deleted = true, updated_at = CURRENT_TIMESTAMP
-        WHERE id = ? AND version = ?
-        """)
-@SQLRestriction("is_deleted = false")
+@SoftDelete(columnName = "is_deleted")
 public class Brand extends BaseEntity {
 
     @Column(name = "name", nullable = false, length = 100)

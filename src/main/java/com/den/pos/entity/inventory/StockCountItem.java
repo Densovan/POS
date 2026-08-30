@@ -10,8 +10,7 @@ import lombok.Setter;
 
 import java.util.UUID;
 import com.den.pos.entity.BaseEntity;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.annotations.SoftDelete;
 
 @Getter
 @Setter
@@ -23,12 +22,7 @@ import org.hibernate.annotations.SQLRestriction;
         @Index(name = "idx_stock_count_items_stock_count_id", columnList = "stock_count_id"),
         @Index(name = "idx_stock_count_items_variant_id", columnList = "variant_id")
 })
-@SQLDelete(sql = """
-        UPDATE stock_count_items
-        SET is_deleted = true, updated_at = CURRENT_TIMESTAMP
-        WHERE id = ? AND version = ?
-        """)
-@SQLRestriction("is_deleted = false")
+@SoftDelete(columnName = "is_deleted")
 public class StockCountItem extends BaseEntity {
 
     @Column(name = "stock_count_id", nullable = false)

@@ -11,8 +11,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import com.den.pos.entity.BaseEntity;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.annotations.SoftDelete;
 
 @Getter
 @Setter
@@ -25,12 +24,7 @@ import org.hibernate.annotations.SQLRestriction;
         @Index(name = "idx_stock_adjustments_product_id", columnList = "product_id"),
         @Index(name = "idx_stock_adjustments_variant_id", columnList = "variant_id")
 })
-@SQLDelete(sql = """
-        UPDATE stock_adjustments
-        SET is_deleted = true, updated_at = CURRENT_TIMESTAMP
-        WHERE id = ? AND version = ?
-        """)
-@SQLRestriction("is_deleted = false")
+@SoftDelete(columnName = "is_deleted")
 public class StockAdjustment extends BaseEntity {
 
     @Column(name = "inventory_id")

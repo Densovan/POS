@@ -15,20 +15,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import com.den.pos.entity.BaseEntity;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.annotations.SoftDelete;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "customers")
-@SQLDelete(sql = """
-        UPDATE customers
-        SET is_deleted = true, updated_at = CURRENT_TIMESTAMP
-        WHERE id = ? AND version = ?
-        """)
-@SQLRestriction("is_deleted = false")
+@SoftDelete(columnName = "is_deleted")
 public class Customer extends BaseEntity {
 
     @Column(name = "first_name", nullable = false, length = 100)

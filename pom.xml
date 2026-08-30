@@ -52,11 +52,6 @@
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
 			<groupId>io.micrometer</groupId>
 			<artifactId>micrometer-registry-prometheus</artifactId>
 		</dependency>
@@ -160,5 +155,21 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<!-- Development-only tooling. Kept out of the default classpath so it can
+		     never leak into a production artifact; enable with -Pdev. -->
+		<profile>
+			<id>dev</id>
+			<dependencies>
+				<dependency>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-devtools</artifactId>
+					<scope>runtime</scope>
+					<optional>true</optional>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
 
 </project>

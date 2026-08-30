@@ -12,8 +12,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 import com.den.pos.entity.BaseEntity;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.annotations.SoftDelete;
 
 @Getter
 @Setter
@@ -26,12 +25,7 @@ import org.hibernate.annotations.SQLRestriction;
         @Index(name = "idx_batches_supplier_id", columnList = "supplier_id"),
         @Index(name = "idx_batches_variant_id", columnList = "variant_id")
 })
-@SQLDelete(sql = """
-        UPDATE batches
-        SET is_deleted = true, updated_at = CURRENT_TIMESTAMP
-        WHERE id = ? AND version = ?
-        """)
-@SQLRestriction("is_deleted = false")
+@SoftDelete(columnName = "is_deleted")
 public class Batch extends BaseEntity {
 
     @Column(name = "product_id")

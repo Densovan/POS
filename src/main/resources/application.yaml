@@ -1,5 +1,7 @@
 server:
   port: ${SERVER_PORT:8080}
+  http2:
+    enabled: ${HTTP2_ENABLED:true}
   servlet:
     context-path: /api/v1
     session:
@@ -10,14 +12,25 @@ server:
     enabled: true
     mime-types: application/json,application/xml,text/html,text/xml,text/plain
   tomcat:
-    threads:
-      max: 200
-      min-spare: 20
     connection-timeout: 30000
 
 spring:
   application:
     name: pos-system
+
+  main:
+    lazy-initialization: ${LAZY_INITIALIZATION:true}
+
+  profiles:
+    # Deployment environments (prod, staging) set SPRING_PROFILES_ACTIVE to
+    # activate their profile-specific application-*.yaml on top of this file.
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+
+  threads:
+    virtual:
+      # Scale blocking request/IO handling on platform threads; off by default
+      # only when explicitly disabled via VIRTUAL_THREADS=false.
+      enabled: ${VIRTUAL_THREADS:true}
 
   servlet:
     encoding:

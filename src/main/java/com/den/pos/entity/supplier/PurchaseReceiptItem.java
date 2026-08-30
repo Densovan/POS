@@ -14,8 +14,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 import com.den.pos.entity.BaseEntity;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.annotations.SoftDelete;
 
 @Getter
 @Setter
@@ -27,12 +26,7 @@ import org.hibernate.annotations.SQLRestriction;
         @Index(name = "idx_purchase_receipt_items_purchase_receipt_id", columnList = "purchase_receipt_id"),
         @Index(name = "idx_purchase_receipt_items_variant_id", columnList = "variant_id")
 })
-@SQLDelete(sql = """
-        UPDATE purchase_receipt_items
-        SET is_deleted = true, updated_at = CURRENT_TIMESTAMP
-        WHERE id = ? AND version = ?
-        """)
-@SQLRestriction("is_deleted = false")
+@SoftDelete(columnName = "is_deleted")
 public class PurchaseReceiptItem extends BaseEntity {
 
     @Column(name = "purchase_receipt_id", nullable = false)

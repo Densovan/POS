@@ -12,8 +12,7 @@ import org.hibernate.annotations.NaturalId;
 import java.math.BigDecimal;
 import java.util.UUID;
 import com.den.pos.entity.BaseEntity;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.annotations.SoftDelete;
 
 @Getter
 @Setter
@@ -25,12 +24,7 @@ import org.hibernate.annotations.SQLRestriction;
         @Index(name = "idx_products_tax_class_id", columnList = "tax_class_id"),
         @Index(name = "idx_products_unit_id", columnList = "unit_id")
 })
-@SQLDelete(sql = """
-        UPDATE products
-        SET is_deleted = true, updated_at = CURRENT_TIMESTAMP
-        WHERE id = ? AND version = ?
-        """)
-@SQLRestriction("is_deleted = false")
+@SoftDelete(columnName = "is_deleted")
 public class Product extends BaseEntity {
 
     @Column(name = "name", nullable = false)

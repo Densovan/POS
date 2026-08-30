@@ -19,19 +19,23 @@ public class SoftDeletePurgeService {
 
     @Transactional
     public int purge(Class<? extends BaseEntity> entityClass) {
-        String table = tableName(entityClass);
-        return entityManager.createNativeQuery(
-                        "DELETE FROM " + table + " WHERE is_deleted = true")
-                .executeUpdate();
+        return doPurge(entityClass);
     }
 
     @Transactional
     public int purgeAll(Collection<Class<? extends BaseEntity>> entityClasses) {
         int total = 0;
         for (Class<? extends BaseEntity> entityClass : entityClasses) {
-            total += purge(entityClass);
+            total += doPurge(entityClass);
         }
         return total;
+    }
+
+    private int doPurge(Class<? extends BaseEntity> entityClass) {
+        String table = tableName(entityClass);
+        return entityManager.createNativeQuery(
+                        "DELETE FROM " + table + " WHERE is_deleted = true")
+                .executeUpdate();
     }
 
     private String tableName(Class<? extends BaseEntity> entityClass) {

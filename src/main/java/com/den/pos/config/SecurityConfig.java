@@ -30,7 +30,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.List;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
@@ -49,10 +49,11 @@ public class SecurityConfig {
 
     @Bean
     @Order(2)
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http,
+                                                   CorsConfigurationSource corsConfigurationSource) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .headers(this::applySecurityHeaders)
                 .authorizeHttpRequests(auth -> auth

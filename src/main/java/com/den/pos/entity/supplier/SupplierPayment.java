@@ -12,8 +12,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 import com.den.pos.entity.BaseEntity;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.annotations.SoftDelete;
 
 @Getter
 @Setter
@@ -24,12 +23,7 @@ import org.hibernate.annotations.SQLRestriction;
         @Index(name = "idx_supplier_payments_purchase_order_id", columnList = "purchase_order_id"),
         @Index(name = "idx_supplier_payments_supplier_id", columnList = "supplier_id")
 })
-@SQLDelete(sql = """
-        UPDATE supplier_payments
-        SET is_deleted = true, updated_at = CURRENT_TIMESTAMP
-        WHERE id = ? AND version = ?
-        """)
-@SQLRestriction("is_deleted = false")
+@SoftDelete(columnName = "is_deleted")
 public class SupplierPayment extends BaseEntity {
 
     @Column(name = "supplier_id")

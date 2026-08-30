@@ -10,20 +10,14 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.util.UUID;
 import com.den.pos.entity.BaseEntity;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.annotations.SoftDelete;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "tax_classes")
-@SQLDelete(sql = """
-        UPDATE tax_classes
-        SET is_deleted = true, updated_at = CURRENT_TIMESTAMP
-        WHERE id = ? AND version = ?
-        """)
-@SQLRestriction("is_deleted = false")
+@SoftDelete(columnName = "is_deleted")
 public class TaxClass extends BaseEntity {
 
     @Column(name = "name", nullable = false, length = 100)

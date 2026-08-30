@@ -12,7 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -39,27 +41,29 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional(readOnly = true)
     public CategoryResponse getById(UUID id) {
-        return categoryRepository.findById(id)
-                .map(categoryMapper::toResponse)
+        Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+        return categoryMapper.toTree(category, childrenByParent());
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<CategoryResponse> findAll() {
-        return categoryRepository.findAll().stream().map(categoryMapper::toResponse).toList();
+        return findAllRoots();
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<CategoryResponse> findRoots() {
-        return categoryRepository.findRootCategories().stream().map(categoryMapper::toResponse).toList();
+        return findAllRoots();
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<CategoryResponse> findByParent(UUID parentId) {
-        return categoryRepository.findByParentId(parentId).stream().map(categoryMapper::toResponse).toList();
+        return categoryRepository.findByParentId(parentId).stream()
+                .map(c -> categoryMapper.toTree(c, childrenByParent()))
+                .toList();
     }
 
     @Override
@@ -86,6 +90,21 @@ public class CategoryServiceImpl implements CategoryService {
         category.setDescription(request.description());
         category.setImageUrl(request.imageUrl());
         category.setTaxClassId(request.taxClassId());
+    }
+
+    private List<CategoryResponse> findAllRoots() {
+        return categoryRepository.findAllActive().stream()
+                .filter(c -> c.getParentId() == null)
+                .collect(Collectors.toList())
+                .stream()
+                .map(c -> categoryMapper.toTree(c, childrenByParent()))
+                .toList();
+    }
+
+    private Map<UUID, List<Category>> childrenByParent() {
+        return categoryRepository.findAllActive().stream()
+                .filter(c -> c.getParentId() != null)
+                .collect(Collectors.groupingBy(Category::getParentId));
     }
 
     private String uniqueSlug(String name) {

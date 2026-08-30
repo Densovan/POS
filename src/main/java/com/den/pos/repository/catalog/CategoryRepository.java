@@ -19,4 +19,7 @@ public interface CategoryRepository extends JpaRepository<Category, UUID> {
 
     @Query(value = "SELECT * FROM categories WHERE parent_id IS NULL AND is_active = true AND is_deleted = false ORDER BY display_order", nativeQuery = true)
     List<Category> findRootCategories();
+
+    @Query(value = "SELECT * FROM categories WHERE is_active = true AND is_deleted = false ORDER BY display_order", nativeQuery = true)
+    List<Category> findAllActive();
 }

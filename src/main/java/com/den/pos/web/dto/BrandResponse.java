@@ -10,6 +10,11 @@ public record BrandResponse(
         String logoUrl,
         String websiteUrl,
         Boolean isActive,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt,
+        UUID createdBy,
+        UUID updatedBy,
+        AuditUserRef createdByUser,
+        AuditUserRef updatedByUser
 ) {
 }

@@ -14,6 +14,9 @@ import java.util.UUID;
 
 public interface EmployeeRepository extends JpaRepository<Employee, UUID> {
 
+    @Query(value = "SELECT * FROM employees WHERE user_id = :userId AND is_deleted = false", nativeQuery = true)
+    Optional<Employee> findByUserId(@Param("userId") UUID userId);
+
     @Query(value = """
             SELECT * FROM employees
             WHERE (first_name ILIKE CONCAT('%', :keyword, '%')
@@ -29,9 +32,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, UUID> {
               AND is_deleted = false
             """, nativeQuery = true)
     Page<Employee> searchByKeyword(@Param("keyword") String keyword, Pageable pageable);
-
-    @Query(value = "SELECT * FROM employees WHERE user_id = :userId AND is_deleted = false", nativeQuery = true)
-    Optional<Employee> findByUserId(@Param("userId") UUID userId);
 
     @Query(value = "SELECT * FROM employees WHERE is_active = true AND is_deleted = false ORDER BY first_name", nativeQuery = true)
     List<Employee> findAllActive();

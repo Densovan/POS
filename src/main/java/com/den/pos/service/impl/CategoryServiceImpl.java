@@ -5,6 +5,8 @@ import com.den.pos.exception.ResourceNotFoundException;
 import com.den.pos.mapper.CategoryMapper;
 import com.den.pos.repository.catalog.CategoryRepository;
 import com.den.pos.service.CategoryService;
+import com.den.pos.service.UserReferenceService;
+import com.den.pos.web.dto.AuditUserRef;
 import com.den.pos.web.dto.CategoryRequest;
 import com.den.pos.web.dto.CategoryResponse;
 import org.springframework.stereotype.Service;
@@ -21,10 +23,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
+    private final UserReferenceService userReferenceService;
 
-    public CategoryServiceImpl(CategoryRepository categoryRepository, CategoryMapper categoryMapper) {
+    public CategoryServiceImpl(CategoryRepository categoryRepository, CategoryMapper categoryMapper,
+                               UserReferenceService userReferenceService) {
         this.categoryRepository = categoryRepository;
         this.categoryMapper = categoryMapper;
+        this.userReferenceService = userReferenceService;
     }
 
     @Override
@@ -35,7 +40,9 @@ public class CategoryServiceImpl implements CategoryService {
         category.setSlug(uniqueSlug(request.name()));
         category.setIsActive(request.isActive() != null ? request.isActive() : true);
         category.setDisplayOrder(request.displayOrder() != null ? request.displayOrder() : 0);
-        return categoryMapper.toResponse(categoryRepository.save(category));
+        Category saved = categoryRepository.saveAndFlush(category);
+        Map<UUID, AuditUserRef> userRefs = userReferenceService.resolveReferences(saved.getCreatedBy(), saved.getUpdatedBy());
+        return categoryMapper.toResponse(saved, userRefs);
     }
 
     @Override
@@ -43,7 +50,7 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryResponse getById(UUID id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
-        return categoryMapper.toTree(category, childrenByParent());
+        return categoryMapper.toTree(category, childrenByParent(), userRefs(categoryRepository.findAllActive()));
     }
 
     @Override
@@ -61,8 +68,10 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional(readOnly = true)
     public List<CategoryResponse> findByParent(UUID parentId) {
+        List<Category> all = categoryRepository.findAllActive();
+        Map<UUID, AuditUserRef> userRefs = userRefs(all);
         return categoryRepository.findByParentId(parentId).stream()
-                .map(c -> categoryMapper.toTree(c, childrenByParent()))
+                .map(c -> categoryMapper.toTree(c, childrenByParent(all), userRefs))
                 .toList();
     }
 
@@ -72,7 +81,9 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
         applyRequest(category, request);
-        return categoryMapper.toResponse(categoryRepository.save(category));
+        Category saved = categoryRepository.saveAndFlush(category);
+        Map<UUID, AuditUserRef> userRefs = userReferenceService.resolveReferences(saved.getCreatedBy(), saved.getUpdatedBy());
+        return categoryMapper.toResponse(saved, userRefs);
     }
 
     @Override
@@ -93,18 +104,30 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     private List<CategoryResponse> findAllRoots() {
-        return categoryRepository.findAllActive().stream()
+        List<Category> all = categoryRepository.findAllActive();
+        Map<UUID, AuditUserRef> userRefs = userRefs(all);
+        return all.stream()
                 .filter(c -> c.getParentId() == null)
-                .collect(Collectors.toList())
-                .stream()
-                .map(c -> categoryMapper.toTree(c, childrenByParent()))
+                .map(c -> categoryMapper.toTree(c, childrenByParent(all), userRefs))
                 .toList();
     }
 
     private Map<UUID, List<Category>> childrenByParent() {
-        return categoryRepository.findAllActive().stream()
+        return childrenByParent(categoryRepository.findAllActive());
+    }
+
+    private Map<UUID, List<Category>> childrenByParent(List<Category> all) {
+        return all.stream()
                 .filter(c -> c.getParentId() != null)
                 .collect(Collectors.groupingBy(Category::getParentId));
+    }
+
+    private Map<UUID, AuditUserRef> userRefs(List<Category> categories) {
+        List<UUID> userIds = categories.stream()
+                .flatMap(c -> java.util.stream.Stream.of(c.getCreatedBy(), c.getUpdatedBy()))
+                .filter(java.util.Objects::nonNull)
+                .toList();
+        return userReferenceService.resolveReferences(userIds);
     }
 
     private String uniqueSlug(String name) {

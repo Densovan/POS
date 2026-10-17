@@ -1,0 +1,88 @@
+2026-08-31 00:05:59.718 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=54s850ms).
+2026-08-31 00:22:31.006 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=12m31s81ms).
+2026-08-31 00:38:26.831 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=15m55s825ms).
+2026-08-31 00:57:42.270 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=16m45s392ms).
+2026-08-31 01:16:42.614 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=19m344ms).
+2026-08-31 01:33:19.116 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=16m36s502ms).
+2026-08-31 01:34:38.790 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=1m19s674ms).
+2026-08-31 01:35:33.677 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=54s888ms).
+2026-08-31 01:52:44.064 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=17m10s386ms).
+2026-08-31 02:09:10.629 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=15m56s548ms).
+2026-08-31 02:10:30.379 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=1m19s750ms).
+2026-08-31 02:23:12.497 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=12m42s118ms).
+2026-08-31 02:43:40.164 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=17m27s485ms).
+2026-08-31 03:01:07.581 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=17m27s417ms).
+2026-08-31 03:02:03.108 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=55s527ms).
+2026-08-31 03:19:13.365 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=17m10s257ms).
+2026-08-31 03:36:13.745 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=17m380ms).
+2026-08-31 03:38:23.065 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=2m9s319ms).
+2026-08-31 03:57:03.159 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=18m40s94ms).
+2026-08-31 04:13:47.899 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=16m44s741ms).
+2026-08-31 04:32:13.757 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=15m55s810ms).
+2026-08-31 04:34:23.217 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=2m9s461ms).
+2026-08-31 04:53:06.079 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=18m42s861ms).
+2026-08-31 05:09:51.615 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=16m45s537ms).
+2026-08-31 05:29:07.652 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=19m16s37ms).
+2026-08-31 05:30:52.275 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=1m44s623ms).
+2026-08-31 05:47:37.775 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=16m45s500ms).
+2026-08-31 06:04:50.652 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=17m12s877ms).
+2026-08-31 06:21:12.629 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=13m51s941ms).
+2026-08-31 06:22:57.264 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=1m44s637ms).
+2026-08-31 06:40:57.423 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=18m158ms).
+2026-08-31 06:57:18.012 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=16m20s590ms).
+2026-08-31 06:59:02.597 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=1m44s584ms).
+2026-08-31 07:15:23.397 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=16m20s801ms).
+2026-08-31 07:16:43.140 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=1m19s743ms).
+2026-08-31 07:33:04.382 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=16m21s242ms).
+2026-08-31 07:34:48.935 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=1m44s553ms).
+2026-08-31 07:36:47.010 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=1m58s74ms).
+2026-08-31 07:57:27.792 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=20m40s783ms).
+2026-08-31 08:22:20.368 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=24m52s576ms).
+2026-08-31 09:09:51.897 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=47m31s529ms).
+2026-08-31 09:56:07.260 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=46m15s363ms).
+2026-08-31 10:12:05.014 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=15m57s754ms).
+2026-08-31 11:25:15.775 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=1h13m10s761ms).
+2026-08-31 11:42:07.625 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=16m51s850ms).
+2026-08-31 12:26:27.888 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=44m20s262ms).
+2026-08-31 13:17:54.211 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=51m26s323ms).
+2026-08-31 13:27:39.985 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=9m45s775ms).
+2026-08-31 14:28:22.128 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=1h42s143ms).
+2026-08-31 15:03:03.759 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=34m41s631ms).
+2026-08-31 15:29:34.266 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=26m30s506ms).
+2026-08-31 16:30:16.429 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=1h42s163ms).
+2026-08-31 16:48:08.174 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=17m51s746ms).
+2026-08-31 17:31:21.441 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=43m13s266ms).
+2026-08-31 18:04:05.856 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=32m44s416ms).
+2026-08-31 18:20:20.100 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=16m14s241ms).
+2026-08-31 18:32:26.928 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=12m6s830ms).
+2026-08-31 18:50:54.872 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=15m57s901ms).
+2026-08-31 18:52:39.463 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=1m44s591ms).
+2026-08-31 19:10:12.112 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=17m32s648ms).
+2026-08-31 19:26:49.562 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=16m37s452ms).
+2026-08-31 19:28:34.160 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=1m44s597ms).
+2026-08-31 19:50:16.712 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=21m42s552ms).
+2026-08-31 19:52:01.384 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=1m44s673ms).
+2026-08-31 20:11:25.779 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=19m24s395ms).
+2026-08-31 20:12:20.623 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=54s843ms).
+2026-08-31 20:31:36.098 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=16m45s441ms).
+2026-08-31 20:33:20.702 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=1m44s605ms).
+2026-08-31 20:50:35.741 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=17m15s38ms).
+2026-08-31 21:06:57.350 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=16m21s610ms).
+2026-08-31 21:09:06.719 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=2m9s368ms).
+2026-08-31 21:26:39.437 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=17m32s718ms).
+2026-08-31 21:34:18.577 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=7m39s140ms).
+2026-08-31 21:36:28.065 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=2m9s489ms).
+2026-08-31 21:54:27.185 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=17m59s116ms).
+2026-08-31 22:04:01.376 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=9m34s193ms).
+2026-08-31 22:07:27.808 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=1m26s399ms).
+2026-08-31 22:33:52.868 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=54s844ms).
+2026-08-31 22:35:12.547 [POSConnectionPool:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - POSConnectionPool - Thread starvation or clock leap detected (housekeeper delta=1m19s680ms).
+2026-08-31 22:40:37.205 [tomcat-handler-7] INFO  i.g.j.b.a.BootUiAutoConfiguration - BootUI activation: Enabled by active profile 'dev'
+2026-08-31 22:40:39.052 [tomcat-handler-12] INFO  c.tngtech.archunit.core.PluginLoader - Detected Java version 23.0.2
+2026-08-31 22:58:39.303 [SpringApplicationShutdownHook] INFO  o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-08-31 22:58:39.307 [tomcat-shutdown] INFO  o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-08-31 22:58:39.307 [SpringApplicationShutdownHook] INFO  o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-08-31 22:58:39.308 [tomcat-shutdown] INFO  o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-08-31 22:58:39.336 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-08-31 22:58:39.337 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - POSConnectionPool - Shutdown initiated...
+2026-08-31 22:58:39.338 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - POSConnectionPool - Shutdown completed.

@@ -15,6 +15,11 @@ public record CategoryResponse(
         Boolean isActive,
         Integer displayOrder,
         LocalDateTime createdAt,
+        LocalDateTime updatedAt,
+        UUID createdBy,
+        UUID updatedBy,
+        AuditUserRef createdByUser,
+        AuditUserRef updatedByUser,
         List<CategoryResponse> children
 ) {
 
@@ -24,8 +29,10 @@ public record CategoryResponse(
 
     public static CategoryResponse of(UUID id, UUID parentId, String name, String slug,
                                       String description, String imageUrl, UUID taxClassId,
-                                      Boolean isActive, Integer displayOrder, LocalDateTime createdAt) {
+                                      Boolean isActive, Integer displayOrder, LocalDateTime createdAt,
+                                      LocalDateTime updatedAt, UUID createdBy, UUID updatedBy) {
         return new CategoryResponse(id, parentId, name, slug, description, imageUrl,
-                taxClassId, isActive, displayOrder, createdAt, List.of());
+                taxClassId, isActive, displayOrder, createdAt, updatedAt, createdBy, updatedBy,
+                null, null, List.of());
     }
 }

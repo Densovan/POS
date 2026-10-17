@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -17,6 +19,21 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     @Query(value = "SELECT * FROM users WHERE employee_id = :employeeId AND is_deleted = false", nativeQuery = true)
     Optional<User> findByEmployeeId(@Param("employeeId") UUID employeeId);
+
+    @Query(value = """
+            SELECT u.id          AS id,
+                   u.email       AS email,
+                   u.employee_id AS employeeId,
+                   u.is_active   AS isActive,
+                   e.first_name  AS firstName,
+                   e.last_name   AS lastName,
+                   e.position    AS position,
+                   e.phone       AS phone
+            FROM users u
+            LEFT JOIN employees e ON e.user_id = u.id AND e.is_deleted = false
+            WHERE u.id IN (:ids) AND u.is_deleted = false
+            """, nativeQuery = true)
+    List<UserInfoProjection> findUserInfoByIds(@Param("ids") Collection<UUID> ids);
 
     @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query(value = """

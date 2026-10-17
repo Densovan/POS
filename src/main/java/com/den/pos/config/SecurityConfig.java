@@ -79,6 +79,29 @@ public class SecurityConfig {
         return http.build();
     }
 
+    /**
+     * Swagger UI / OpenAPI docs are public so they can be used for manual testing.
+     * They get a relaxed CSP because the bundled Swagger UI page uses inline
+     * scripts/styles and data: images that the global hardened policy blocks.
+     */
+    @Bean
+    @Order(0)
+    public SecurityFilterChain swaggerSecurityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .securityMatcher("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/webjars/**")
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+                .headers(headers -> headers.contentSecurityPolicy(csp -> csp.policyDirectives(
+                        "default-src 'self'; script-src 'self' 'unsafe-inline'; "
+                                + "style-src 'self' 'unsafe-inline'; img-src 'self' data:; "
+                                + "font-src 'self' data:; connect-src 'self'; "
+                                + "frame-ancestors 'none'; object-src 'none'")))
+                .headers(headers -> headers.referrerPolicy(referrer ->
+                        referrer.policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN)));
+
+        return http.build();
+    }
+
     @Bean
     @Order(1)
     public SecurityFilterChain managementSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -129,7 +152,7 @@ public class SecurityConfig {
                 "default-src 'self'; base-uri 'self'; frame-ancestors 'none'; object-src 'none'"));
         headers.referrerPolicy(referrer ->
                 referrer.policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN));
-        headers.permissionsPolicy(perms -> perms.policy(
+        headers.permissionsPolicyHeader(perms -> perms.policy(
                 "camera=(), microphone=(), geolocation=(), payment=(), usb=(), speaker=()"));
         headers.crossOriginOpenerPolicy(coop ->
                 coop.policy(CrossOriginOpenerPolicyHeaderWriter.CrossOriginOpenerPolicy.SAME_ORIGIN));

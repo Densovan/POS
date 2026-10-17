@@ -1,12 +1,13 @@
 package com.den.pos.security;
 
+import com.den.pos.common.UserIdAware;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.UUID;
 
-public class AppUserPrincipal implements UserDetails {
+public class AppUserPrincipal implements UserIdAware, UserDetails {
 
     private final UUID id;
     private final UserDetails delegate;

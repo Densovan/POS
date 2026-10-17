@@ -6,6 +6,8 @@ import com.den.pos.exception.ResourceNotFoundException;
 import com.den.pos.mapper.ProductMapper;
 import com.den.pos.repository.catalog.ProductRepository;
 import com.den.pos.service.ProductService;
+import com.den.pos.service.UserReferenceService;
+import com.den.pos.web.dto.AuditUserRef;
 import com.den.pos.web.dto.ProductRequest;
 import com.den.pos.web.dto.ProductResponse;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -16,6 +18,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -23,10 +28,13 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
+    private final UserReferenceService userReferenceService;
 
-    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper) {
+    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper,
+                              UserReferenceService userReferenceService) {
         this.productRepository = productRepository;
         this.productMapper = productMapper;
+        this.userReferenceService = userReferenceService;
     }
 
     @Override
@@ -34,21 +42,30 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponse create(ProductRequest request) {
         Product product = new Product();
         applyRequest(product, request);
-        return productMapper.toResponse(save(product));
+        Product saved = save(product);
+        Map<UUID, AuditUserRef> userRefs = userReferenceService.resolveReferences(saved.getCreatedBy(), saved.getUpdatedBy());
+        return productMapper.toResponse(saved, userRefs);
     }
 
     @Override
     @Transactional(readOnly = true)
     public ProductResponse getById(UUID id) {
-        return productRepository.findById(id)
-                .map(productMapper::toResponse)
+        Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+        Map<UUID, AuditUserRef> userRefs = userReferenceService.resolveReferences(product.getCreatedBy(), product.getUpdatedBy());
+        return productMapper.toResponse(product, userRefs);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<ProductResponse> search(String keyword, Pageable pageable) {
-        return productRepository.searchByKeyword(keyword, pageable).map(productMapper::toResponse);
+        Page<Product> products = productRepository.searchByKeyword(keyword, pageable);
+        List<UUID> userIds = products.getContent().stream()
+                .flatMap(p -> java.util.stream.Stream.of(p.getCreatedBy(), p.getUpdatedBy()))
+                .filter(java.util.Objects::nonNull)
+                .toList();
+        Map<UUID, AuditUserRef> userRefs = userReferenceService.resolveReferences(userIds);
+        return products.map(p -> productMapper.toResponse(p, userRefs));
     }
 
     @Override
@@ -57,7 +74,9 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
         applyRequest(product, request);
-        return productMapper.toResponse(save(product));
+        Product saved = save(product);
+        Map<UUID, AuditUserRef> userRefs = userReferenceService.resolveReferences(saved.getCreatedBy(), saved.getUpdatedBy());
+        return productMapper.toResponse(saved, userRefs);
     }
 
     @Override

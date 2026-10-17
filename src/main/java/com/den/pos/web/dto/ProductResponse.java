@@ -23,6 +23,11 @@ public record ProductResponse(
         String description,
         String mainImageUrl,
         Boolean isActive,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt,
+        UUID createdBy,
+        UUID updatedBy,
+        AuditUserRef createdByUser,
+        AuditUserRef updatedByUser
 ) {
 }

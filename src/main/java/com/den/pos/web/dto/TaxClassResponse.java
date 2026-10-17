@@ -11,6 +11,10 @@ public record TaxClassResponse(
         String description,
         Boolean isDefault,
         LocalDateTime createdAt,
-        LocalDateTime updatedAt
+        LocalDateTime updatedAt,
+        UUID createdBy,
+        UUID updatedBy,
+        AuditUserRef createdByUser,
+        AuditUserRef updatedByUser
 ) {
 }

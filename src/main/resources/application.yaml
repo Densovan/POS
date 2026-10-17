@@ -189,6 +189,24 @@ cors:
   allowed-headers: "*"
   allow-credentials: true
 
+# Swagger UI / OpenAPI docs:
+#   UI      → http://localhost:8080/api/v1/swagger-ui.html
+#   JSON    → http://localhost:8080/api/v1/v3/api-docs
+springdoc:
+  api-docs:
+    enabled: ${SWAGGER_ENABLED:true}
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: ${SWAGGER_ENABLED:true}
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+    try-it-out-enabled: true
+    display-request-duration: true
+    filter: true
+    persist-authorization: true
+  default-produces-media-type: application/json
+
 app:
   security:
     jwt:

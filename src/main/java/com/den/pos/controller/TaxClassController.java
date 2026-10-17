@@ -4,6 +4,9 @@ import com.den.pos.service.TaxClassService;
 import com.den.pos.web.dto.ApiResponse;
 import com.den.pos.web.dto.TaxClassRequest;
 import com.den.pos.web.dto.TaxClassResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,6 +26,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
+@Tag(name = "Tax classes", description = "Tax classes and rates used for pricing")
 @RestController
 @RequestMapping("/tax-classes")
 @PreAuthorize("hasAuthority('taxes:read')")
@@ -34,6 +38,7 @@ public class TaxClassController {
         this.taxClassService = taxClassService;
     }
 
+    @Operation(summary = "Create a tax class", description = "Rate is a percentage: 10.00 for 10%")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('taxes:create')")
     public ResponseEntity<ApiResponse<TaxClassResponse>> create(@Valid @RequestBody TaxClassRequest request) {
@@ -44,22 +49,29 @@ public class TaxClassController {
                 .body(ApiResponse.success(response, "Tax class created successfully"));
     }
 
+    @Operation(summary = "List all tax classes")
     @GetMapping
     public ApiResponse<List<TaxClassResponse>> findAll() {
         return ApiResponse.success(taxClassService.findAll(), "Tax classes retrieved successfully");
     }
 
+    @Operation(summary = "Get a tax class by id")
     @GetMapping("/{id}")
-    public ApiResponse<TaxClassResponse> getById(@PathVariable UUID id) {
+    public ApiResponse<TaxClassResponse> getById(
+            @Parameter(description = "Tax class UUID") @PathVariable UUID id) {
         return ApiResponse.success(taxClassService.getById(id), "Tax class retrieved successfully");
     }
 
+    @Operation(summary = "Update a tax class")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('taxes:update')")
-    public ApiResponse<TaxClassResponse> update(@PathVariable UUID id, @Valid @RequestBody TaxClassRequest request) {
+    public ApiResponse<TaxClassResponse> update(
+            @Parameter(description = "Tax class UUID") @PathVariable UUID id,
+            @Valid @RequestBody TaxClassRequest request) {
         return ApiResponse.success(taxClassService.update(id, request), "Tax class updated successfully");
     }
 
+    @Operation(summary = "Delete a tax class", description = "Hard delete; fails with 409 if products reference it")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('taxes:delete')")
     public ApiResponse<Void> delete(@PathVariable UUID id) {

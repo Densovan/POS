@@ -11,10 +11,13 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import com.den.pos.common.UserIdAware;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Getter
@@ -41,7 +44,6 @@ public abstract class BaseEntity {
     @Column(name = "created_by", updatable = false)
     private UUID createdBy;
 
-    @LastModifiedBy
     @Column(name = "updated_by")
     private UUID updatedBy;
 
@@ -57,11 +59,21 @@ public abstract class BaseEntity {
         if (createdAt == null) {
             createdAt = now;
         }
-        updatedAt = now;
+        updatedAt = null;
+        updatedBy = null;
     }
 
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
+        updatedBy = currentUserId().orElse(null);
+    }
+
+    private static Optional<UUID> currentUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserIdAware user) {
+            return Optional.ofNullable(user.getId());
+        }
+        return Optional.empty();
     }
 }

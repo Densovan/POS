@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.annotations.NaturalId;
 import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
@@ -29,7 +28,6 @@ public class ProductVariant extends BaseEntity {
     @Column(name = "product_id", nullable = false)
     private UUID productId;
 
-    @NaturalId
     @Column(name = "sku", nullable = false, unique = true, length = 100)
     private String sku;
 

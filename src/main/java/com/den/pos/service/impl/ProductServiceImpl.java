@@ -1,16 +1,20 @@
 package com.den.pos.service.impl;
 
 import com.den.pos.entity.catalog.Product;
+import com.den.pos.exception.BusinessException;
 import com.den.pos.exception.ConflictException;
 import com.den.pos.exception.ResourceNotFoundException;
 import com.den.pos.mapper.ProductMapper;
 import com.den.pos.repository.catalog.ProductRepository;
 import com.den.pos.service.ProductService;
+import com.den.pos.service.ProductVariantService;
 import com.den.pos.service.UserReferenceService;
 import com.den.pos.web.dto.AuditUserRef;
 import com.den.pos.web.dto.ProductRequest;
 import com.den.pos.web.dto.ProductResponse;
+import com.den.pos.web.dto.VariantRequest;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 
 import java.sql.SQLException;
 import org.springframework.data.domain.Page;
@@ -29,12 +33,14 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
     private final UserReferenceService userReferenceService;
+    private final ProductVariantService variantService;
 
     public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper,
-                              UserReferenceService userReferenceService) {
+                              UserReferenceService userReferenceService, ProductVariantService variantService) {
         this.productRepository = productRepository;
         this.productMapper = productMapper;
         this.userReferenceService = userReferenceService;
+        this.variantService = variantService;
     }
 
     @Override
@@ -43,6 +49,11 @@ public class ProductServiceImpl implements ProductService {
         Product product = new Product();
         applyRequest(product, request);
         Product saved = save(product);
+        if (request.variants() != null) {
+            for (VariantRequest variant : request.variants()) {
+                variantService.create(saved.getId(), variant);
+            }
+        }
         Map<UUID, AuditUserRef> userRefs = userReferenceService.resolveReferences(saved.getCreatedBy(), saved.getUpdatedBy());
         return productMapper.toResponse(saved, userRefs);
     }
@@ -71,6 +82,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public ProductResponse update(UUID id, ProductRequest request) {
+        if (request.variants() != null && !request.variants().isEmpty()) {
+            throw new BusinessException(HttpStatus.BAD_REQUEST,
+                    "Nested 'variants' is only used when creating a product — manage existing variants via /products/{id}/variants");
+        }
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
         applyRequest(product, request);

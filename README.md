@@ -433,6 +433,8 @@ conflicts with a local Postgres on 5432).
 | `V9__soft_delete_tombstones.sql` | `deleted_at`, `deleted_by`, `is_deleted` across tables |
 | `V10__is_deleted_boolean.sql` | Normalized soft-delete flags to boolean |
 | `V11__audit_fk_indexes_and_fix_sales_is_deleted.sql` | Indexes for audit FKs; fixed `sales.is_deleted` |
+| `V12__grant_owner_full_permissions.sql` | Grants the `owner` role the full permission catalogue (V2 had only given it `products:*`) |
+| `V13__grant_manager_catalog_read.sql` | Grants `manager` read access to categories, brands, units and tax classes |
 
 ### Notable schema choices
 
@@ -529,6 +531,10 @@ Modules covered by the seeded catalogue: `pos`, `products`, `inventory` (incl. `
 `units`, `taxes`, `reports` (incl. `export`), `settings`, `audit`, `backups` (incl. `restore`),
 `roles` (`manage`), `users`, `loyalty`, `refunds`, `exchanges`.
 
+Role and permission data is fully dynamic at runtime: the `/roles` and `/users` endpoints above
+let an admin create roles, grant/revoke permissions, and assign roles to users without touching
+SQL or restarting.
+
 ### Error handling
 
 `GlobalExceptionHandler` (`@RestControllerAdvice`) maps everything consistently:
@@ -599,9 +605,23 @@ Class-level `@PreAuthorize("hasAuthority('products:read')")`.
 |---|---|---|---|
 | `GET` | `/products/search?keyword=&page=&size=&sort=` | `products:read` | Case-insensitive search across name / SKU / barcode. Default page size 20, sorted `createdAt DESC` |
 | `GET` | `/products/{id}` | `products:read` | Fetch one product (includes computed `profitMargin`) |
-| `POST` | `/products` | `products:create` | Create → `201` + `Location` header |
+| `POST` | `/products` | `products:create` | Create → `201` + `Location` header. Accepts an optional nested `variants` list — product + variants are created atomically (any failure rolls back everything) |
 | `PUT` | `/products/{id}` | `products:update` | Update |
 | `DELETE` | `/products/{id}` | `products:delete` | Soft delete (`isActive = false`) |
+
+### Product variants — `/products/{productId}/variants`
+
+Class-level `@PreAuthorize("hasAuthority('products:read')")`. Each variant carries its own SKU/barcode and optional price overrides; responses include computed `effectiveCostPrice` / `effectiveSellingPrice` (variant override, else the parent product's price). Creating the first variant flips the product's `isVariantParent` to `true`. Variants can also be supplied inline on `POST /products` (nested `variants` array, create-only — `PUT /products/{id}` rejects a non-empty list with `400`).
+
+| Method | Path | Requires | Description |
+|---|---|---|---|
+| `GET` | `/products/{productId}/variants` | `products:read` | List all non-deleted variants of the product (with audit-user enrichment) |
+| `GET` | `/products/{productId}/variants/{id}` | `products:read` | Fetch one variant (includes effective prices) |
+| `POST` | `/products/{productId}/variants` | `products:create` | Create → `201` + `Location` header. `attributes` stored as JSONB |
+| `PUT` | `/products/{productId}/variants/{id}` | `products:update` | Full replace: omitted optional fields fall back to defaults |
+| `DELETE` | `/products/{productId}/variants/{id}` | `products:delete` | Soft delete (`isActive = false`) |
+
+SKU and barcode are **globally unique across both products and variants** — collisions (including against the parent product) return `409 Conflict`. A variant is 404 unless it belongs to the `{productId}` in the path.
 
 ### Categories — `/categories` (hierarchical)
 
@@ -646,6 +666,30 @@ Class-level `@PreAuthorize("hasAuthority('products:read')")`.
 | `POST` | `/tax-classes` | `taxes:create` | Create |
 | `PUT` | `/tax-classes/{id}` | `taxes:update` | Update |
 | `DELETE` | `/tax-classes/{id}` | `taxes:delete` | Hard delete |
+
+### Roles — `/roles` (permission management)
+
+| Method | Path | Requires | Description |
+|---|---|---|---|
+| `GET` | `/roles` | `roles:read` | All roles with their granted `module:action` keys |
+| `GET` | `/roles/permissions` | `roles:read` | Full permission catalogue (every grantable key) |
+| `GET` | `/roles/{id}` | `roles:read` | One role |
+| `POST` | `/roles` | `roles:manage` | Create a custom role (starts with no permissions) |
+| `PUT` | `/roles/{id}` | `roles:manage` | Rename / describe — system roles are rejected |
+| `PUT` | `/roles/{id}/permissions` | `roles:manage` | Replace the permission set (grant/revoke delta) |
+| `DELETE` | `/roles/{id}` | `roles:manage` | Delete a custom role |
+
+### Users — `/users` (role assignment)
+
+| Method | Path | Requires | Description |
+|---|---|---|---|
+| `GET` | `/users` | `users:read` | All users with their roles (no credentials) |
+| `GET` | `/users/{id}` | `users:read` | One user |
+| `PUT` | `/users/{id}/roles` | `users:manage` | Replace the user's roles (self-change rejected) |
+
+**Dynamic enforcement:** authorities are re-read from `role_permissions` / `user_roles` on
+every request, so permission and role changes take effect on the very next call — no restart
+and no re-login, even for holders of a still-valid access token.
 
 ### Response shape
 

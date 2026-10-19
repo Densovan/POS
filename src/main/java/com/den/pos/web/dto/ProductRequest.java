@@ -1,12 +1,14 @@
 package com.den.pos.web.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 @Schema(name = "ProductRequest", description = "Product create/update payload")
@@ -44,6 +46,8 @@ public record ProductRequest(
         @Schema(description = "Full description", example = "100% Arabica dark roast whole bean coffee, 1 kg bag.")
         String description,
         @Schema(description = "Main product image URL", example = "https://example.com/images/espresso-beans.jpg")
-        String mainImageUrl
+        String mainImageUrl,
+        @Schema(description = "Optional variants created together with the product in one transaction (only used on create; manage later via /products/{id}/variants)")
+        List<@Valid VariantRequest> variants
 ) {
 }

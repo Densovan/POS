@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -15,6 +16,14 @@ public interface UserRoleRepository extends JpaRepository<UserRole, UserRoleId> 
 
     @Query(value = "SELECT r.name FROM roles r JOIN user_roles ur ON ur.role_id = r.id WHERE ur.user_id = :userId", nativeQuery = true)
     List<String> findRoleNamesByUserId(@Param("userId") UUID userId);
+
+    @Query(value = """
+            SELECT ur.user_id AS userId, r.name AS roleName
+            FROM user_roles ur
+            JOIN roles r ON r.id = ur.role_id
+            WHERE ur.user_id IN (:userIds)
+            """, nativeQuery = true)
+    List<UserRoleNameProjection> findRoleNamesByUserIds(@Param("userIds") Collection<UUID> userIds);
 
     @Query(value = """
             SELECT DISTINCT p.module || ':' || p.action
@@ -39,4 +48,8 @@ public interface UserRoleRepository extends JpaRepository<UserRole, UserRoleId> 
     @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query(value = "DELETE FROM user_roles WHERE user_id = :userId AND role_id = :roleId", nativeQuery = true)
     int revoke(@Param("userId") UUID userId, @Param("roleId") UUID roleId);
+
+    @Modifying(flushAutomatically = true, clearAutomatically = true)
+    @Query(value = "DELETE FROM user_roles WHERE user_id = :userId", nativeQuery = true)
+    int revokeAllForUser(@Param("userId") UUID userId);
 }
